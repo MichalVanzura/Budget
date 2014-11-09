@@ -1,0 +1,23 @@
+{
+    "attributes": {
+        "ui-sref": {
+            "context": "a"
+        },
+        "ui-view": {
+            "context": "div"
+        },
+        "checklist-model": {
+            "context": "input"
+        }
+    },
+    "elements": {
+        "highchart": {
+            "attributes": {
+                "id": {},
+                "class": {},
+                "config": {},
+                "ng-if": {}
+            }
+        }
+    }
+}

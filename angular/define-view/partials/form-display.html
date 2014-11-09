@@ -1,0 +1,66 @@
+<h3>Zobrazení:</h3>
+
+<div class="well">
+    <h4 class="text-primary">Globální nastavení</h4>
+    <div class="form-group">
+        <label for="stack" class="control-label">Stohování</label>
+        <select class="form-control" id="stack" ng-model="chartConfig.options.plotOptions.series.stacking" ng-options="t.id as t.title for t in chartStack" ng-change="changeStacking()"></select>
+    </div>
+    <div class="form-group">
+        <label for="xCategories" class="control-label">Kategorie</label>
+        <select class="form-control" id="xCategories" ng-change="changeXCategories(formData.chartCatField)" ng-model="formData.chartCatField" ng-options="t as t.alias for t in formData.table_fields"></select>
+    </div>
+</div>
+
+<div class="well">
+    <h4 class="text-primary">Série</h4>
+    <div class="form-group">
+        <label class="control-label">Sloupec</label>
+        <select class="form-control" id="addSeries" ng-model="column" ng-options="t as t.alias for t in formData.table_fields"></select>
+    </div>
+    <div class="form-group">
+        <label class="control-label">Typ</label>
+        <select class="form-control" ng-model="seriesType" ng-options="t.id as t.title for t in chartTypes"></select>
+    </div>
+    <div ng-if="seriesType !== 'pie'">
+        <div class="form-group">
+            <label>Barva</label> 
+            <input type="text" class="form-control" ng-model="seriesColor">
+        </div>
+        <button class="btn btn-default" ng-click="addSeries(column, seriesType, seriesColor)">Přidat Sérii</button>
+    </div>
+
+    <div class="panel panel-primary" ng-if="seriesType === 'pie'">
+        <div class="panel-heading">
+            <h5 class="panel-title">Přidat novou sérii</h5>
+        </div>
+        <div class="panel-body">
+            <div class="form-group" ng-repeat="row in tableData.table">
+                <label>{{chartConfig.xAxis.categories[$index]}} (Barva)</label>
+                <input type="text" class="form-control" ng-model="colors[$index]">
+            </div>
+            <button class="btn btn-default" ng-click="addPieSeries(column, colors)">Přidat Sérii</button>
+        </div>
+    </div>
+</div>
+
+<div class="clearfix"></div>
+<div class="col-sm-4" ng-repeat="ser in chartSeries">
+    <label style="color: {{ser.color}}">{{ser.name}}</label>
+    <div class="form-group">
+        <button class="btn btn-default" ng-click="removeSeries($index)">Smazat</button>
+    </div>
+</div>
+
+<div class="clearfix"></div>
+<highchart id="chart1" config="chartConfig"></highchart>
+
+
+<div class="form-group row">
+    <div class="col-sm-3 col-xs-6">
+        <a ui-sref="define-view.add-rows" class="btn btn-block btn-info">
+            <span class="glyphicon glyphicon-circle-arrow-left"></span> Zpět
+        </a>
+    </div>
+    <button ng-click="createView()" class="btn btn-primary col-sm-3 col-xs-6 col-sm-offset-6">Uložit pohled</button>
+</div>

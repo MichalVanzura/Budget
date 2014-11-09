@@ -1,0 +1,26 @@
+<h3>Pole</h3>
+
+<div class="form-group" ng-repeat="val in joinViewsData.views track by val.id">
+    <h4>{{val.name}}</h4>
+    <div class="container-fluid">
+        <form class="form-horizontal" role="form">
+<!--            field.alias for field in viewFields | filter:{budget_view_id:joinViewsData.views[0].id}-->
+            <div class="row col-md-3 col-lg-2" ng-repeat="field in viewFields | filter:{budget_view_id:joinViewsData.views[$index].id} track by field.id">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" checklist-model="joinViewsData.fields" checklist-value="field"> {{field.alias}}
+                    </label>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="form-group row">
+    <div class="col-sm-3 col-xs-6">
+        <a ui-sref="join-views.views" class="btn btn-block btn-info">
+            <span class="glyphicon glyphicon-circle-arrow-left"></span> Zpět
+        </a>
+    </div>
+    <button ng-click="createJoinView()" class="btn btn-primary col-sm-3 col-xs-6 col-sm-offset-6">Uložit pohled</button>
+</div>

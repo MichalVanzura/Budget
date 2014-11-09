@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <base href="/angular/" />
+        <meta charset="utf-8">
+        <title>Nastavení pohledu</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/assets/css/angular.css">
+        <link rel="stylesheet" href="/assets/css/ng-table.css">
+
+        <script src="/assets/js/jquery-1.11.1.min.js"></script>
+        <script src="/assets/js/bootstrap.min.js"></script>
+        <script src="/assets/js/angular.min.js"></script>
+        <script src="/assets/js/angular-route.js"></script>
+        <script src="/assets/js/angular-ui-router.min.js"></script>
+        <script src="/assets/js/angular-animate.min.js"></script>
+        <script src="/assets/js/angular-filter.min.js"></script>
+        <script src="/assets/js/ngStorage.min.js"></script>
+        <script src="/assets/js/highcharts.js"></script>
+        <script src="/assets/js/highcharts-ng.js"></script>
+        <script src="/assets/js/check-list-model.js"></script>
+        <script src="/assets/js/i18n/angular-locale_cs-cz.js"></script>
+        <script src="/assets/js/angular-slugify.js"></script>
+
+        <script src="/assets/js/admin/app.js"></script>
+        <script src="/assets/js/admin/define-view/controllers.js"></script>
+        <script src="/assets/js/admin/define-view/directives.js"></script>
+        <script src="/assets/js/admin/define-view/services.js"></script>
+        
+        <script src="/assets/js/admin/join-views/controllers.js"></script>
+        <script src="/assets/js/admin/join-views/services.js"></script>
+        
+        <script src="/assets/js/admin/define-template/controllers.js"></script>
+    </head>
+    <body ng-app="adminApp">
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">Administrace</a>
+                </div>
+                <div id="navbar" class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a ui-sref-active="active" ui-sref="define-view.view-name">Vytvořit pohled</a></li>
+                        <li><a ui-sref-active="active" ui-sref="join-views.view-name">Spojit pohledy</a></li>
+                        <li><a ui-sref-active="active" ui-sref="define-template.template-name">Vytvořit šablonu</a></li>
+                    </ul>
+                </div><!--/.nav-collapse -->
+            </div>
+        </nav>
+
+        <div class="container">
+            <div ui-view></div>
+        </div>
+
+    </body>
+</html>

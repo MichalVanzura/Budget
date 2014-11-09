@@ -1,0 +1,31 @@
+h2 {
+    margin-bottom: 25px;
+}
+
+.nav > .active {
+    color: #428BCA
+}
+
+#status-buttons span {
+    color: #fff;
+    background:#080808; 
+    display:block; 
+    height:30px; 
+    margin:0 auto 10px; 
+    padding-top:5px; 
+    width:30px;
+    border-radius:50%;
+}
+
+#status-buttons .active span {
+    background:#428BCA;
+}
+
+.checkbox-inline.no_indent,
+.checkbox-inline.no_indent+.checkbox-inline.no_indent {
+  margin-left: 0;
+  margin-right: 10px;
+}
+.checkbox-inline.no_indent:last-child {
+  margin-right: 0;
+}

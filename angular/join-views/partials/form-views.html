@@ -1,0 +1,60 @@
+<h3>Pohledy</h3>
+<div class="form-group">
+    <div class="row">
+        <div class="form-group col-sm-6">
+            <select class="form-control" ng-options="view.name for view in views" ng-model="joinViewsData.views[0]">
+                <option style="display:none" value="">Vyberte pohled</option>
+            </select>
+        </div>
+        <div class="form-group col-sm-3 col-sm-offset-3" ng-if="viewCount > 1">
+            <select class="form-control" ng-options="field.alias for field in viewFields | filter:{budget_view_id:joinViewsData.views[0].id}" ng-model="joinViewsData.joins[0][0]">
+                <option style="display:none" value="">Vyberte atribut na spojení</option>
+            </select>
+        </div>
+    </div>
+
+    <div ng-repeat="(key, val) in joinViewsData.views" ng-if="key !== '0'">
+        <div class="row form-group">
+            <div class="col-sm-6 text-center">
+                <span class="text-default">Spojit s</span>
+            </div>
+            <div class="col-sm-6 text-center">
+                <img src="/assets/img/icon/left-angeled-arrow.png"> <span class="text-default">Přes</span> <img src="/assets/img/icon/right-angeled-arrow.png">
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-sm-6">
+                <select class="form-control" ng-options="view.name for view in views" ng-model="joinViewsData.views[key]">
+                    <option style="display:none" value="">Vyberte pohled</option>
+                </select>
+            </div>
+            <div class="form-group col-sm-3">
+                <select class="form-control" ng-options="field.alias for field in viewFields | filter:{budget_view_id:joinViewsData.views[key].id}" ng-model="joinViewsData.joins[key - 1][1]">
+                    <option style="display:none" value="">Vyberte atribut na spojení</option>
+                </select>
+            </div>
+            <div class="form-group col-sm-3" ng-if="viewCount - 1 != key">
+                <select class="form-control" ng-options="field.alias for field in viewFields | filter:{budget_view_id:joinViewsData.views[key].id}" ng-model="joinViewsData.joins[key][0]">
+                    <option style="display:none" value="">Vyberte atribut na spojení</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div id="more-views"></div>
+    <button class="btn btn-default" ng-click="click()">Přidat Pohled</button>
+
+</div>
+
+<div class="form-group row">
+    <div class="col-sm-3 col-xs-6">
+        <a ui-sref="join-views.view-name" class="btn btn-block btn-info">
+            <span class="glyphicon glyphicon-circle-arrow-left"></span> Zpět
+        </a>
+    </div>
+    <div class="col-sm-3 col-xs-6 col-sm-offset-6">
+        <a ui-sref="join-views.fields" class="btn btn-block btn-info">
+            Další <span class="glyphicon glyphicon-circle-arrow-right"></span>
+        </a>
+    </div>
+</div>

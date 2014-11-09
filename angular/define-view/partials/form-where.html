@@ -1,0 +1,72 @@
+<h3>Filtrování řádků</h3>
+
+<div class="form-group">
+    <div class="row">
+        <div class="form-group col-sm-4">
+            <select class="form-control" ng-options="tableName for tableName in tableNames" ng-model="formData.where[0]['table_name']">
+                <option style="display:none" value="">Tabulka</option>
+            </select>
+        </div>
+        <div class="form-group col-sm-4">
+            <select class="form-control" ng-options="field for field in tableData.tablesWithFields[formData.where[0].table_name]" ng-model="formData.where[0]['field']">
+                <option style="display:none" value="">Sloupec</option>
+            </select>
+        </div>
+        <div class="form-group col-sm-2">
+            <select class="form-control" ng-options="op.value as op.name for op in operators" ng-model="formData.where[0]['operator']">
+                <option style="display:none" value="">Operace</option>
+            </select>
+        </div>
+        <div class="form-group col-sm-2">
+            <input type="text" class="form-control" placeholder="Hodnota" ng-model="formData.where[0]['value']"/>
+        </div>
+    </div>
+
+    <div ng-repeat="(key, val) in formData.where" ng-if="key !== '0'">
+        <label class="radio-inline">
+            <input type="radio" name="content{{key}}" ng-model="formData.where[key]['rel']" value="and">
+            A Zároveň
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="content{{key}}" ng-model="formData.where[key]['rel']" value="or">
+            Nebo
+        </label>
+        <div class="row">
+            <div class="form-group col-sm-4">
+            <select class="form-control" ng-options="tableName for tableName in tableNames" ng-model="formData.where[key]['table_name']">
+                <option style="display:none" value="">Tabulka</option>
+            </select>
+        </div>
+        <div class="form-group col-sm-4">
+            <select class="form-control" ng-options="field for field in tableData.tablesWithFields[formData.where[0].table_name]" ng-model="formData.where[key]['field']">
+                <option style="display:none" value="">Sloupec</option>
+            </select>
+        </div>
+        <div class="form-group col-sm-2">
+            <select class="form-control" ng-options="op.value as op.name for op in operators" ng-model="formData.where[key]['operator']">
+                <option style="display:none" value="">Operace</option>
+            </select>
+        </div>
+        <div class="form-group col-sm-2">
+            <input type="text" class="form-control" placeholder="Hodnota" ng-model="formData.where[key]['value']"/>
+        </div>
+        </div>
+    </div>
+
+    <div id="more-where"></div>
+    <button class="btn btn-default" ng-click="click()">Přidat Filtr</button>
+
+</div>
+
+<div class="form-group row">
+    <div class="col-sm-3 col-xs-6">
+        <a ui-sref="define-view.column-names({tableName: formData.table_name})" class="btn btn-block btn-info">
+            <span class="glyphicon glyphicon-circle-arrow-left"></span> Zpět
+        </a>
+    </div>
+    <div class="col-sm-3 col-xs-6 col-sm-offset-6">
+        <a ui-sref="define-view.group-by" class="btn btn-block btn-info">
+            Další <span class="glyphicon glyphicon-circle-arrow-right"></span>
+        </a>
+    </div>
+</div>

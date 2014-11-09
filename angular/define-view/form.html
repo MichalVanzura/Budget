@@ -1,0 +1,72 @@
+<!-- form.html -->
+<div class="row">
+
+    <div id="form-container">
+
+        <div class="page-header text-center">
+            <h2>Nastavení pohledu</h2>
+
+            <ul id="status-buttons" class="nav nav-pills nav-justified">
+                <li ui-sref-active="active" ui-sref=".view-name"><span>1</span> Název pohledu</li>
+                <li ui-sref-active="active" ui-sref=".table-name"><span>2</span> Tabulky</li>
+                <li ui-sref-active="active" ui-sref=".table-fields"><span>3</span> Výběr polí</li>
+                <li ui-sref-active="active" ui-sref=".column-names"><span>4</span> Sloupce</li>
+                <li ui-sref-active="active" ui-sref=".where"><span>5</span> Filtrovat řádky</li>
+                <li ui-sref-active="active" ui-sref=".group-by"><span>6</span> Seskupit</li>
+                <li ui-sref-active="active" ui-sref=".add-rows"><span>7</span> Další</li>
+                <li ui-sref-active="active" ui-sref=".display"><span>8</span> Zobrazení</li>
+            </ul>
+        </div>
+
+        <!-- use ng-submit to catch the form submission and use our Angular function -->
+        <form id="signup-form" ng-submit="processForm()">
+
+            <!-- our nested state views will be injected here -->
+            <div id="form-views" ui-view></div>
+        </form>
+
+    </div>
+
+    <button class="btn btn-default" ng-click="reset()">Resetovat</button>
+
+    <h3 class="text-center">{{ formData.view_name}}</h3>
+    <h4 class="text-center"><span ng-repeat="val in formData.table_names"><span class="label label-default">{{val}}</span> </span></h4>
+    <div class="panel panel-default">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th ng-repeat="value in formData.table_fields track by $index">
+                        <span>{{value.alias}}</span>
+
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="(key, value) in tableData.table track by $index">
+                    <td ng-repeat="(k, val) in formData.table_fields track by $index">
+                        <span ng-if="val.formatter == 'no'">
+                            <span ng-show="value[val.alias] != null">{{value[val.alias]}}</span>
+                            <span ng-show="value[val.alias] == null">{{value[val.table_name + '.' + val.name]}}</span>
+                        </span>
+                        <span ng-if="val.formatter == 'currency'">
+                            <span ng-show="value[val.alias] != null">{{value[val.alias] | currency}}</span>
+                            <span ng-show="value[val.alias] == null">{{value[val.table_name + '.' + val.name] | currency}}</span>
+                        </span>
+                        <span ng-if="val.formatter == 'number'">
+                            <span ng-show="value[val.alias] != null">{{value[val.alias] | number}}</span>
+                            <span ng-show="value[val.alias] == null">{{value[val.table_name + '.' + val.name] | number}}</span>
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- show our formData as it is being typed -->
+    <pre>
+{{ formData | json}}
+    </pre>
+    <pre>
+{{ tableData.table | json}}
+    </pre>
+</div>

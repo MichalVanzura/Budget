@@ -1,0 +1,18 @@
+<h3>Html Šablona</h3>
+<div class="form-group">
+    <select class="form-control" ng-options="tmpl.id as tmpl.name for tmpl in htmlTemplates"  ng-model="templateData.html_template">
+        <option style="display:none" value="">Vyberte šablonu</option>
+    </select>
+</div>
+<div class="form-group row">
+    <div class="col-sm-3 col-xs-6">
+        <a ui-sref="define-template.template-name" class="btn btn-block btn-info">
+            <span class="glyphicon glyphicon-circle-arrow-left"></span> Zpět
+        </a>
+    </div>
+    <div class="col-sm-3 col-xs-6 col-sm-offset-6">
+        <a ui-sref="define-template.template-fields" class="btn btn-block btn-info">
+            Další <span class="glyphicon glyphicon-circle-arrow-right"></span>
+        </a>
+    </div>
+</div>

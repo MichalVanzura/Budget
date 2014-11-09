@@ -1,0 +1,22 @@
+<h3>Seskupit podle:</h3>
+<div class="form-group" ng-repeat="val in formData.table_names">
+    <h4>{{val}}</h4>
+    <div class="container-fluid">
+        <label class="checkbox-inline no_indent" ng-repeat="field in tableData.tableInfos[val]">
+            <input type="checkbox" checklist-model="formData.group_by" checklist-value="field.table_name+'.'+field.name"> {{field.name}}
+        </label>
+    </div>
+</div>
+
+<div class="form-group row">
+    <div class="col-sm-3 col-xs-6">
+        <a ui-sref="define-view.where" class="btn btn-block btn-info">
+            <span class="glyphicon glyphicon-circle-arrow-left"></span> Zpět
+        </a>
+    </div>
+    <div class="col-sm-3 col-xs-6 col-sm-offset-6">
+        <a ui-sref="define-view.add-rows" class="btn btn-block btn-info">
+            Další <span class="glyphicon glyphicon-circle-arrow-right"></span>
+        </a>
+    </div>
+</div>
