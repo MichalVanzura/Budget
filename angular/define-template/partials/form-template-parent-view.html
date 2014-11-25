@@ -1,0 +1,47 @@
+<h3>Nadřazený pohled</h3>
+
+<div class="form-group">
+    <label class="radio-inline">
+        <input type="radio" ng-model="templateData.template_view.type" value="row"> Konkrétní hodnota v pohledu
+    </label>
+    <label class="radio-inline">
+        <input type="radio" ng-model="templateData.template_view.type" value="col"> Sloupec v pohledu
+    </label>
+</div>
+
+<label>Pohled</label>
+<div class="form-group">
+    <select class="form-control" ng-options="view as view.name for view in views" ng-model="templateData.template_view.view" ng-change="changeView(templateData.template_view.view)">
+        <option style="display:none" value="">Vyberte pohled</option>
+    </select>
+</div>
+
+<label>Slupec</label>
+<div class="form-group">
+    <select class="form-control" ng-options="field as field.alias for field in formData.table_fields" ng-model="templateData.template_view.field" ng-change="changeField(templateData.template_view.field)">
+        <option style="display:none" value="">Vyberte Slupec pohledu</option>
+    </select>
+</div>
+
+<div ng-if="templateData.template_view.type == 'row'">
+    <label>Hodnota</label>
+    <div class="form-group">
+        <select class="form-control" ng-options="value as value for value in values" ng-model="templateData.template_view.value">
+            <option style="display:none" value="">Vyberte Řádek</option>
+        </select>
+    </div>
+</div>
+
+<h3 class="text-center">{{ formData.view_name}}</h3>
+<div class="panel panel-default">
+    <view-table></view-table>
+</div>
+
+<div class="form-group row">
+    <div class="col-sm-3 col-xs-6">
+        <a ui-sref="define-template.template-fields" class="btn btn-block btn-info">
+            <span class="glyphicon glyphicon-circle-arrow-left"></span> Zpět
+        </a>
+    </div>
+    <button ng-click="createTemplate()" class="btn btn-primary col-sm-3 col-xs-6 col-sm-offset-6">Vytvořit šablonu</button>
+</div>

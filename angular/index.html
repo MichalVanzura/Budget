@@ -21,6 +21,7 @@
         <script src="/assets/js/check-list-model.js"></script>
         <script src="/assets/js/i18n/angular-locale_cs-cz.js"></script>
         <script src="/assets/js/angular-slugify.js"></script>
+        <script src="/assets/js/angular-debounce.js"></script>
 
         <script src="/assets/js/admin/app.js"></script>
         <script src="/assets/js/admin/define-view/controllers.js"></script>
@@ -31,6 +32,9 @@
         <script src="/assets/js/admin/join-views/services.js"></script>
         
         <script src="/assets/js/admin/define-template/controllers.js"></script>
+        
+        <script src="/assets/js/admin/global/directives.js"></script>
+        <script src="/assets/js/admin/global/services.js"></script>
     </head>
     <body ng-app="adminApp">
         <nav class="navbar navbar-default" role="navigation">
@@ -49,6 +53,7 @@
                         <li><a ui-sref-active="active" ui-sref="define-view.view-name">Vytvořit pohled</a></li>
                         <li><a ui-sref-active="active" ui-sref="join-views.view-name">Spojit pohledy</a></li>
                         <li><a ui-sref-active="active" ui-sref="define-template.template-name">Vytvořit šablonu</a></li>
+                        <li><a ui-sref-active="active" ui-sref="show-template({ templateName: 'mesto', subject: '00283347', year: 2014 })">Zobrazit šablonu</a></li>
                     </ul>
                 </div><!--/.nav-collapse -->
             </div>

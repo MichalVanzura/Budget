@@ -1,18 +1,75 @@
 <h3>Pole</h3>
 
-<div class="form-group" ng-repeat="val in joinViewsData.views track by val.id">
+<div class="form-group" ng-repeat="val in formData.views track by val.id">
     <h4>{{val.name}}</h4>
     <div class="container-fluid">
         <form class="form-horizontal" role="form">
-<!--            field.alias for field in viewFields | filter:{budget_view_id:joinViewsData.views[0].id}-->
-            <div class="row col-md-3 col-lg-2" ng-repeat="field in viewFields | filter:{budget_view_id:joinViewsData.views[$index].id} track by field.id">
+            <!--            field.alias for field in viewFields | filter:{budget_view_id:formData.views[0].id}-->
+            <div class="row col-md-3 col-lg-2" ng-repeat="field in viewFields| filter:{budget_view_id:formData.views[$index].id} track by field.id">
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" checklist-model="joinViewsData.fields" checklist-value="field"> {{field.alias}}
+                        <input type="checkbox" checklist-model="formData.table_fields" checklist-value="field"> {{field.alias}}
                     </label>
                 </div>
             </div>
         </form>
+    </div>
+</div>
+
+<div class="checkbox">
+    <label>
+        <input type="checkbox" ng-model="formData.aggregate.hasAggregate"> Agregační sloupec
+    </label>
+</div>
+
+<div ng-if="formData.aggregate.hasAggregate">
+    <div class="form-group">
+        <label>Název sloupce</label>
+        <div class="form-group">
+            <input type="text" class="form-control" ng-model="formData.aggregate.alias" debounce="1000">
+        </div>
+        <label>Operace</label>
+        <div class="form-group">
+            <select class="form-control" ng-options="op as op for op in operators" ng-model="formData.aggregate.operator">
+                <option style="display:none" value="">Vyberte operaci</option>
+            </select>
+        </div>
+        <label>Formát</label>
+        <div class="form-group">
+            <select class="form-control" ng-options="formatter.value as formatter.name for formatter in formatters" ng-model="formData.aggregate.formatter">
+                <option style="display:none" value="">Vyberte formát</option>
+            </select>
+        </div>
+        <label>Sloupce</label>
+        <div class="row">
+            <div class="form-group col-sm-6">
+                <select class="form-control" ng-options="view.name for (key, view) in formData.views" ng-model="formData.aggregate['first_view']">
+                    <option style="display:none" value="">Vyberte pohled</option>
+                </select>
+            </div>
+            <div class="form-group col-sm-6">
+                <select class="form-control" ng-options="field as field.alias for field in viewFields | filter:{budget_view_id:formData.aggregate['first_view'].id}" ng-model="formData.aggregate['first_field']">
+                    <option style="display:none" value="">Vyberte sloupec</option>
+                </select>
+            </div>
+        </div>
+        <div>
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <select class="form-control" ng-options="view.name for (key, view) in formData.views" ng-model="formData.aggregate['second_view']">
+                        <option style="display:none" value="">Vyberte pohled</option>
+                    </select>
+                </div>
+                <div class="form-group col-sm-6">
+                    <select class="form-control" ng-options="field as field.alias for field in viewFields | filter:{budget_view_id:formData.aggregate['second_view'].id}" ng-model="formData.aggregate['second_field']">
+                        <option style="display:none" value="">Vyberte sloupec</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <button class="btn btn-success" ng-click="updateClick()">Aktualizovat</button>
     </div>
 </div>
 
@@ -22,5 +79,9 @@
             <span class="glyphicon glyphicon-circle-arrow-left"></span> Zpět
         </a>
     </div>
-    <button ng-click="createJoinView()" class="btn btn-primary col-sm-3 col-xs-6 col-sm-offset-6">Uložit pohled</button>
+    <div class="col-sm-3 col-xs-6 col-sm-offset-6">
+        <a ui-sref="join-views.display" class="btn btn-block btn-info">
+            Další <span class="glyphicon glyphicon-circle-arrow-right"></span>
+        </a>
+    </div>
 </div>

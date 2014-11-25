@@ -18,10 +18,22 @@ class budgetView extends CI_Controller {
         $result = $this->budget_view_model->getViewFields();
         $this->output->set_output(json_encode($result));
     }
-    
+
     public function getAllViews() {
         $this->output->set_content_type('application/json');
         $result = $this->budget_view_model->getAllViews();
+        $this->output->set_output(json_encode($result));
+    }
+    
+    public function getSimpleViewById($id, $subject = NULL, $year = NULL, $value = NULL) {
+        $this->output->set_content_type('application/json');
+        $result = $this->budget_view_model->getSimpleViewById($id, $subject, $year, $value);
+        $this->output->set_output(json_encode($result));
+    }
+    
+    public function getJoinViewById($id, $subject = NULL, $year = NULL, $value = NULL) {
+        $this->output->set_content_type('application/json');
+        $result = $this->budget_view_model->getJoinViewById($id, $subject, $year, $value);
         $this->output->set_output(json_encode($result));
     }
 
@@ -33,9 +45,11 @@ class budgetView extends CI_Controller {
         $fields = $this->input->post('fields');
         $where = $this->input->post('where');
         $groupby = $this->input->post('groupby');
-        $chartStacking = $this->input->post('chartStacking');
-        $chartCategory = $this->input->post('chartCategory');
-        $chartFields = $this->input->post('chartFields');
+        $chart = $this->input->post('chart');
+        $filters = $this->input->post('filters');
+        
+        $firephp = FirePHP::getInstance(true);
+        $firephp->log($chart, 'chart');
 
         $distinctValue = FALSE;
         if ($distinct === 'true') {
@@ -60,7 +74,7 @@ class budgetView extends CI_Controller {
         }
         $from = array_shift($tables);
 
-        $this->budget_view_model->createView($viewName, $distinctValue, $from, $joinArray, $fields, $whereArray, $groupby, $chartStacking, $chartCategory, $chartFields);
+        $this->budget_view_model->createView($viewName, $distinctValue, $from, $joinArray, $fields, $whereArray, $groupby, $chart, $filters);
     }
 
     public function queryJoinViews() {
@@ -68,51 +82,53 @@ class budgetView extends CI_Controller {
         $views = $this->input->post('views');
         $joins = $this->input->post('joins');
         $fields = $this->input->post('fields');
-        
-        if(empty($fields)) {
+        $aggregate = $this->input->post('aggregate');
+
+        if (empty($fields)) {
             return;
         }
 
-        //LOG
-        $firephp = FirePHP::getInstance(true);
-
-        $i = 0;
-        $from = '';
-        $previousId = 0;
-        $joinsArray = array();
-        foreach ($views as $view) {
-            $viewSQL = $this->budget_view_model->getViewSQL($view['id']);
-            if ($i == 0) {
-                $from = sprintf("(%s) AS `view%d`", $viewSQL, $view['id']);
-            } else {
-                $joinstr = sprintf("LEFT JOIN (%s) AS `view%d` ON `view%d`.`%s`=`view%d`.`%s`", $viewSQL, $view['id'], $previousId, $joins[$i-1][0]['alias'], $view['id'], $joins[$i-1][1]['alias']);
-                array_push($joinsArray, $joinstr);
-            }
-            $previousId = $view['id'];
-            $i++;
-        }
-        
-        $selectArray = array();
-        foreach($fields as $field) {
-            $selectstr = sprintf("`view%s`.`%s`", $field['budget_view_id'], $field['alias']);
-            array_push($selectArray, $selectstr);
-        }
-        
-
-        $sql = sprintf("SELECT %s FROM %s %s", implode(', ', $selectArray), $from, implode(' ', $joinsArray));
-        $query = $this->db->query($sql)->result_array();
-        $firephp->log($query, 'sql');
+        $query = $this->budget_view_model->queryJoinView($views, $joins, $fields, $aggregate);
 
         $this->output->set_output(json_encode($query));
     }
-    
+
     public function createJoinView() {
         $viewName = $this->input->post('name');
         $views = $this->input->post('views');
         $joins = $this->input->post('joins');
         $fields = $this->input->post('fields');
-        
-        $this->budget_view_model->createJoinView($viewName, $views, $joins, $fields);
+        $aggregate = $this->input->post('aggregate');
+        $chart = $this->input->post('chart');
+
+        $this->budget_view_model->createJoinView($viewName, $views, $joins, $fields, $aggregate, $chart);
+    }
+
+    public function getViewsTables() {
+        $views = $this->input->post('views');
+
+        $first = array_shift($views);
+        $result = array();
+        if ($first['category'] == 'simple') {
+            $result = $this->budget_view_model->getSimpleViewTablesById($first['id']);
+        } else {
+            $result = $this->budget_view_model->getJoinViewTablesById($first['id']);
+        }
+
+        foreach ($views as $view) {
+            if ($view['category'] == 'simple') {
+                $tables = $this->budget_view_model->getSimpleViewTablesById($view['id']);
+            } else {
+                $tables = $this->budget_view_model->getJoinViewTablesById($view['id']);
+            }
+
+            foreach ($tables as $table) {
+                array_push($result, $table);
+            }
+        }
+
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode(array_keys(array_flip(($result)))));
     }
 
 }

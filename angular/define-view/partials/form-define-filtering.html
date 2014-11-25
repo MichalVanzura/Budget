@@ -1,0 +1,35 @@
+<h3>Výsledek filtrovat podle</h3>
+
+<div ng-repeat="filter in filters track by $index">
+    <div class="checkbox">
+        <label>
+            <input ng-model="filter.selected" type="checkbox" ng-click="checkPrevious($index)">{{filter.name}}
+        </label>
+    </div>
+    <div class="row" ng-if="filter.selected">
+        <div class="form-group col-sm-6">
+            <select class="form-control" ng-options="tableName for tableName in tableNames" ng-model="formData.filters[filter.value]['table_name']">
+                <option style="display:none" value="">Tabulka</option>
+            </select>
+        </div>
+        <div class="form-group col-sm-6">
+            <select class="form-control" ng-options="field for field in tableData.tablesWithFields[formData.filters[filter.value]['table_name']]" ng-model="formData.filters[filter.value]['field_name']">
+                <option style="display:none" value="">Sloupec</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+
+<div class="form-group row">
+    <div class="col-sm-3 col-xs-6">
+        <a ui-sref="define-view.group-by" class="btn btn-block btn-info">
+            <span class="glyphicon glyphicon-circle-arrow-left"></span> Zpět
+        </a>
+    </div>
+    <div class="col-sm-3 col-xs-6 col-sm-offset-6">
+        <a ui-sref="define-view.display" class="btn btn-block btn-info">
+            Další <span class="glyphicon glyphicon-circle-arrow-right"></span>
+        </a>
+    </div>
+</div>

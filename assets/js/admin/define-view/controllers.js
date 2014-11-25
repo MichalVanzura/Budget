@@ -7,10 +7,6 @@ viewControllers.controller('FormController', ['$scope', '$http', '$window',
             $window.location.href = '/angular/view-name';
         };
 
-//        $scope = $sessionStorage;
-        // we will store all of our form data in this object
-
-//        if (sessionStorage.length == 0) {
         $scope.formData = {};
         $scope.tableData = {};
         $scope.tableData.table = {};
@@ -21,14 +17,9 @@ viewControllers.controller('FormController', ['$scope', '$http', '$window',
         $scope.formData.table_fields = [];
         $scope.formData.where = {"0": {"table_name": "", "field": "", "operator": "", "value": "", "rel": ""}};
         $scope.formData.distinct = false;
-        $scope.formData.chartCatField = {};
-        $scope.formData.chartSerFields = [];
-        $scope.formData.chartStacking = '';
-//        } else {
-//            $scope.formData = $sessionStorage.formData;
-//            $scope.tableData = $sessionStorage.tableData;
-//            $scope.tableInfos = $sessionStorage.tableInfos;
-//        }
+        $scope.formData.chart = {};
+        $scope.formData.chart.serieFields = [];
+        $scope.formData.filters = {subject: '', year: '',value: ''};
 
         $scope.createView = function () {
             $formdata = $scope.formData;
@@ -44,9 +35,8 @@ viewControllers.controller('FormController', ['$scope', '$http', '$window',
                             fields: $formdata.table_fields,
                             where: $formdata.where,
                             groupby: $formdata.group_by,
-                            chartStacking: $formdata.chartStacking,
-                            chartCategory: $formdata.chartCatField,
-                            chartFields: $formdata.chartSerFields,
+                            chart: $formdata.chart,
+                            filters: $formdata.filters,
                         }),
                 headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}
             }).success(function () {
@@ -114,7 +104,7 @@ viewControllers.controller('WhereController', ['$scope', 'queryDatabase',
             {name: 'Rovná se (=)', value: '='},
             {name: 'Nerovná se (=)', value: '!='},
         ];
-        tables = [];
+        var tables = [];
         for (var key in $scope.formData.table_names) {
             tables.push($scope.formData.table_names[key]);
         }
@@ -166,6 +156,34 @@ viewControllers.controller('GroupByController', ['$scope', 'queryDatabase',
         });
     }]);
 
+viewControllers.controller('FilterController', ['$scope',
+    function ($scope) {
+        $scope.filters = [
+            {name: 'Subjekt', selected: false, value: 'subject'},
+            {name: 'Rok', selected: false, value: 'year'},
+            {name: 'Hodnota', selected: false, value: 'value'},
+        ];
+        
+        var tables = [];
+        for (var key in $scope.formData.table_names) {
+            tables.push($scope.formData.table_names[key]);
+        }
+        $scope.tableNames = tables;
+
+        $scope.checkPrevious = function (index) {
+            var selected = $scope.filters[index].selected;
+            if (selected === false) {
+                for (i = 0; i < index; i++) {
+                    $scope.filters[i].selected = !selected;
+                }
+            } else {
+                for (i = index; i < $scope.filters.length; i++) {
+                    $scope.filters[i].selected = false;
+                }
+            }
+        }
+    }]);
+
 viewControllers.controller('DisplayController', ['$scope',
     function ($scope) {
         $scope.selectedOptions = 'table';
@@ -185,6 +203,8 @@ viewControllers.controller('DisplayController', ['$scope',
             {"id": "normal", "title": "Normální"},
             {"id": "percent", "title": "Procentuální"}
         ];
+
+        $scope.formData.chart.stacking = "Žádné";
 
         $scope.chartConfig = {
             options: {
@@ -213,59 +233,78 @@ viewControllers.controller('DisplayController', ['$scope',
 
         $scope.seriesType = "column";
 
+        $scope.changeStacking = function (stacking) {
+            $scope.formData.chart.stacking = stacking;
+        }
+
         $scope.catColumnName = "";
-        $scope.changeXCategories = function (catColumnName) {
+        $scope.changeXCategories = function (catColumn) {
             var rnd = [];
             for (var row in $scope.tableData.table) {
-                rnd.push($scope.tableData.table[row][catColumnName.alias]);
+                rnd.push($scope.tableData.table[row][catColumn.alias]);
             }
             $scope.chartConfig.xAxis.categories = rnd;
         };
 
         $scope.columnName = $scope.formData.table_fields[0].alias;
         $scope.seriesColor = '';
-        $scope.addSeries = function (columnName, seriesType, color) {
+        $scope.addSeries = function (column, seriesType, color) {
             var rnd = [];
             for (var row in $scope.tableData.table) {
-                rnd.push(parseInt($scope.tableData.table[row][columnName.alias]));
+                rnd.push(parseInt($scope.tableData.table[row][column.alias]));
             }
             $scope.chartConfig.series.push({
                 type: seriesType,
-                name: columnName.alias,
+                name: column.alias,
                 data: rnd,
                 color: color,
             });
-            $scope.formData.chartSerFields.push(columnName);
-            
+            $scope.formData.chart.serieFields.push(
+                    {
+                        field: column,
+                        color: color,
+                        type: seriesType,
+                    }
+            );
+
         };
 
         $scope.colors = [];
-        $scope.addPieSeries = function (columnName) {
+        $scope.addPieSeries = function (column) {
             var rnd = [];
+            var colors = [];
             for (var row in $scope.tableData.table) {
                 rnd.push({
                     name: $scope.chartConfig.xAxis.categories[row],
-                    y: parseInt($scope.tableData.table[row][columnName.alias]),
+                    y: parseInt($scope.tableData.table[row][column.alias]),
                     color: $scope.colors[row],
                 });
-                $scope.formData.chartSerFields.push(columnName);
+                colors.push(
+                        {
+                            value: $scope.chartConfig.xAxis.categories[row],
+                            color: $scope.colors[row]
+                        }
+                );
             }
-            console.log(rnd);
+            $scope.formData.chart.serieFields.push(
+                    {
+                        field: column,
+                        colors: colors,
+                        type: 'pie',
+                    }
+            );
+
             $scope.chartConfig.series.push({
                 type: 'pie',
-                name: columnName.alias,
+                name: column.alias,
                 data: rnd,
             });
         };
 
         $scope.removeSeries = function (id) {
-            var seriesArray = $scope.chartConfig.series;
-            seriesArray.splice(id, 1);
+            $scope.chartConfig.series.splice(id, 1);
+            $scope.formData.chart.serieFields.splice(id, 1);
         };
-        
-        $scope.changeStacking = function() {
-            $scope.formData.chartStacking = $scope.chartConfig.options.plotOptions.series.stacking;
-        }
     }]);
 
 

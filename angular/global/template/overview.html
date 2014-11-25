@@ -1,0 +1,26 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-lg-4 col-lg-push-4">
+            <view-table ng-if="overviewDisplay === 'table'" form="overviewForm" table="overviewTable"></view-table>
+            <view-chart ng-if="overviewDisplay === 'chart'" chart="overviewChart.config"></view-chart>
+<!--            <view-table form="overviewForm" table="overviewTable"></view-table>-->
+        </div>
+        <div class="col-xs-12 col-sm-6 col-lg-4 col-lg-pull-4">
+            <view-table ng-if="incomeDisplay === 'table'" form="incomeForm" table="incomeTable"></view-table>
+            <view-chart ng-if="incomeDisplay === 'chart'" chart="incomeChart.config"></view-chart>
+            <!--<view-table form="incomeForm" table="incomeTable"></view-table>-->
+        </div>
+        <div class="col-xs-12 col-sm-6 col-lg-4">
+            <view-table ng-if="outcomeDisplay === 'table'" form="outcomeForm" table="outcomeTable"></view-table>
+            <view-chart ng-if="outcomeDisplay === 'chart'" chart="outcomeChart.config"></view-chart>
+            <!--<view-table form="outcomeForm" table="outcomeTable"></view-table>-->
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-8 col-sm-offset-2 col-lg-6 col-lg-offset-3">
+            <view-table ng-if="saldoDisplay === 'table'" form="saldoForm" table="saldoTable"></view-table>
+            <view-chart ng-if="saldoDisplay === 'chart'" chart="saldoChart.config"></view-chart>
+            <!--<view-table form="saldoForm" table="saldoTable"></view-table>-->
+        </div>
+    </div>
+</div>

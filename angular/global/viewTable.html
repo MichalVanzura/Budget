@@ -1,0 +1,71 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th ng-repeat="value in formData.table_fields track by $index">
+                <span>{{value.alias}}</span>
+            </th>
+            <th ng-if="formData.aggregate.hasAggregate">
+                <span>{{formData.aggregate.alias}}</span>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="(key, value) in tableData.table track by $index">
+            <td ng-repeat="(k, val) in formData.table_fields track by $index">
+                <a href="show-template/form/{{formData.links[''].url}}/{{value[val.alias]}}" ng-if="val.alias === formData.links[''].alias">
+                    <span ng-if="val.formatter == 'no'">
+                        <span ng-show="value[val.alias] != null">{{value[val.alias]}}</span>
+                        <span ng-show="value[val.alias] == null">{{value[val.table_name + '.' + val.name]}}</span>
+                    </span>
+                    <span ng-if="val.formatter == 'currency'">
+                        <span ng-show="value[val.alias] != null">{{value[val.alias]| currency}}</span>
+                        <span ng-show="value[val.alias] == null">{{value[val.table_name + '.' + val.name]| currency}}</span>
+                    </span>
+                    <span ng-if="val.formatter == 'number'">
+                        <span ng-show="value[val.alias] != null">{{value[val.alias]| number}}</span>
+                        <span ng-show="value[val.alias] == null">{{value[val.table_name + '.' + val.name]| number}}</span>
+                    </span>
+                </a>
+                <a href="show-template/form/{{formData.links[value[val.alias]].url}}" ng-if="formData.links[value[val.alias]] != undefined">
+                    <span ng-if="val.formatter == 'no'">
+                        <span ng-show="value[val.alias] != null">{{value[val.alias]}}</span>
+                        <span ng-show="value[val.alias] == null">{{value[val.table_name + '.' + val.name]}}</span>
+                    </span>
+                    <span ng-if="val.formatter == 'currency'">
+                        <span ng-show="value[val.alias] != null">{{value[val.alias]| currency}}</span>
+                        <span ng-show="value[val.alias] == null">{{value[val.table_name + '.' + val.name]| currency}}</span>
+                    </span>
+                    <span ng-if="val.formatter == 'number'">
+                        <span ng-show="value[val.alias] != null">{{value[val.alias]| number}}</span>
+                        <span ng-show="value[val.alias] == null">{{value[val.table_name + '.' + val.name]| number}}</span>
+                    </span>
+                </a>
+                <span ng-if="formData.links[value[val.alias]] == undefined && val.alias !== formData.links[''].alias">
+                    <span ng-if="val.formatter == 'no'">
+                        <span ng-show="value[val.alias] != null">{{value[val.alias]}}</span>
+                        <span ng-show="value[val.alias] == null">{{value[val.table_name + '.' + val.name]}}</span>
+                    </span>
+                    <span ng-if="val.formatter == 'currency'">
+                        <span ng-show="value[val.alias] != null">{{value[val.alias]| currency}}</span>
+                        <span ng-show="value[val.alias] == null">{{value[val.table_name + '.' + val.name]| currency}}</span>
+                    </span>
+                    <span ng-if="val.formatter == 'number'">
+                        <span ng-show="value[val.alias] != null">{{value[val.alias]| number}}</span>
+                        <span ng-show="value[val.alias] == null">{{value[val.table_name + '.' + val.name]| number}}</span>
+                    </span>
+                </span>
+            </td>
+            <td ng-if="formData.aggregate.hasAggregate">
+                <span ng-if="formData.aggregate.formatter == 'no'">
+                    {{value[formData.aggregate.alias]}}
+                </span>
+                <span ng-if="formData.aggregate.formatter == 'currency'">
+                    {{value[formData.aggregate.alias]| currency}}
+                </span>
+                <span ng-if="formData.aggregate.formatter == 'number'">
+                    {{value[formData.aggregate.alias]| number}}
+                </span>
+            </td>
+        </tr>
+    </tbody>
+</table>

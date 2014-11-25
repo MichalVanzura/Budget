@@ -75,14 +75,18 @@ class City extends CI_Controller {
 
         return $overviewChart;
     }
-    
-    private function createData($subject, $year, $datainfo) {        
+
+    private function createData($subject, $year, $datainfo) {
         $revenues = $this->getRevenuesByItemClass($subject, $year);
-        $revenuesBudget = array_map(function ($x, $y) { return $x-$y; }, $this->getBudgetRevenuesByItemClass($subject, $year), $revenues);
-        
+        $revenuesBudget = array_map(function ($x, $y) {
+            return $x - $y;
+        }, $this->getBudgetRevenuesByItemClass($subject, $year), $revenues);
+
         $costs = $this->getRevenuesByItemClass($subject, $year);
-        $costsBudget = array_map(function ($x, $y) { return $x-$y; }, $this->getBudgetCostsByParagraphGroup($subject, $year), $costs);
-        
+        $costsBudget = array_map(function ($x, $y) {
+            return $x - $y;
+        }, $this->getBudgetCostsByParagraphGroup($subject, $year), $costs);
+
         $data = array(
             'datainfo' => $datainfo,
             'appearance' => $this->appearance_model->get_appearance($subject),
@@ -94,7 +98,7 @@ class City extends CI_Controller {
             'costsSum' => $this->ucetnictvi_pol_model->getCostsSum($subject, $year),
             'overviewChart' => $this->getOverviewChart($subject),
         );
-        
+
         return $data;
     }
 
@@ -104,7 +108,12 @@ class City extends CI_Controller {
 
         $data = $this->createData($subject, $year, $datainfo);
         $data['subMenu'] = true;
-        $this->load->template('city/view_old', $data);
+        if ($year != date("Y")) {
+            $this->load->template('city/view_old', $data);
+        } else {
+            $this->load->template('city/view_new', $data);
+        }
+        
     }
 
     public function index($subject) {
@@ -123,36 +132,36 @@ class City extends CI_Controller {
 
         $this->load->template('city/index', $data);
     }
-    
+
     public function revenues($subject, $year = NULL) {
         $datainfo = $this->datainfo_model->getDataInfoBySubject($subject);
         $this->load->title($datainfo[0]['subjekt_nazev'] . ' ' . $year . ' | ' . 'Příjmy');
-        
+
         $data = array(
             'datainfo' => $datainfo[0],
             'prefix' => 'prijmy/',
-            'next_level' => 'polozka/mesto/'.$subject.'/'.$year,
+            'next_level' => 'polozka/mesto/' . $subject . '/' . $year . '/',
             'table' => $this->ucetnictvi_pol_model->getRevenuesByItemClass($subject, $year),
         );
         $this->load->template('table', $data);
     }
-    
+
     public function costs($subject, $year = NULL) {
         $datainfo = $this->datainfo_model->getDataInfoBySubject($subject);
         $this->load->title($datainfo[0]['subjekt_nazev'] . ' ' . $year . ' | ' . 'Příjmy');
-        
+
         $data = array(
             'datainfo' => $datainfo[0],
             'prefix' => 'vydaje/',
-            'next_level' => 'paragraf/mesto/'.$subject.'/'.$year,
+            'next_level' => 'paragraf/mesto/' . $subject . '/' . $year . '/',
             'table' => $this->ucetnictvi_pol_model->getCostsByParagraphGroup($subject, $year),
         );
         $this->load->template('table', $data);
     }
-    
+
     public function itemClass($subject, $itemClass, $year = NULL) {
         $datainfo = $this->datainfo_model->getDataInfoBySubject($subject);
-        
+
         $data = array(
             'datainfo' => $datainfo[0],
             'prefix' => 'polozka/',
@@ -160,10 +169,10 @@ class City extends CI_Controller {
         );
         $this->load->template('table', $data);
     }
-    
+
     public function paragraphGroup($subject, $paragraphGroup, $year = NULL) {
         $datainfo = $this->datainfo_model->getDataInfoBySubject($subject);
-        
+
         $data = array(
             'datainfo' => $datainfo[0],
             'prefix' => 'paragraf/',

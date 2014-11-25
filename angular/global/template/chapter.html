@@ -1,0 +1,8 @@
+<div class="container-fluid">
+    <div class="row">
+        <div>
+            <view-table ng-if="chartDisplay === 'table'" form="chartForm" table="chartTable"></view-table>
+            <view-chart ng-if="chartDisplay === 'chart'" chart="chartChart.config"></view-chart>
+        </div>
+    </div>
+</div>

@@ -12,6 +12,9 @@ angular.module('adminApp', [
     'highcharts-ng',
     'templateControllers',
     'slugifier',
+    'globalDirectives',
+    'debounce',
+    'globalServices',
 ])
 
 // configuring our routes 
@@ -56,9 +59,10 @@ angular.module('adminApp', [
 			url: '/display',
 			templateUrl: 'define-view/partials/form-display.html',
                         controller: 'DisplayController',
-		}).state('define-view.add-rows', {
-			url: '/add-rows',
-			templateUrl: 'define-view/partials/form-add-rows.html',
+		}).state('define-view.define-filtering', {
+			url: '/define-filtering',
+			templateUrl: 'define-view/partials/form-define-filtering.html',
+                        controller: 'FilterController'
 		});
                 
         $stateProvider
@@ -77,6 +81,10 @@ angular.module('adminApp', [
 			url: '/fields',
 			templateUrl: 'join-views/partials/form-fields.html',
                         controller: 'JoinFieldsController',
+		}).state('join-views.display', {
+			url: '/display',
+			templateUrl: 'join-views/partials/form-display.html',
+                        controller: 'JoinDisplayController',
 		});
                 
         $stateProvider
@@ -96,6 +104,17 @@ angular.module('adminApp', [
 			url: '/fields',
 			templateUrl: 'define-template/partials/form-template-fields.html',
                         controller: 'TemplateFieldsController',
+		}).state('define-template.template-parent-view', {
+			url: '/parent-view',
+			templateUrl: 'define-template/partials/form-template-parent-view.html',
+                        controller: 'TemplateParentViewController',
+		});
+                
+        $stateProvider
+		.state('show-template', {
+			url: '/show-template/form/:templateName/:subject/:year{value:(?:/[^/]+)?}',
+			templateUrl: 'show-template/form.html',
+                        controller: 'TemplateShowController',
 		});
                 
         $stateProvider

@@ -11,6 +11,6 @@ class Welcome extends CI_Controller {
 //    		'infos' => $this->datainfo_model->getDataInfos(),
 //    	);
 //        $this->load->view('welcome', $data);
-        redirect(base_url().'mesto/00283347','refresh');
+        redirect(base_url().'mesto/00283347/2014','refresh');
     }
 }

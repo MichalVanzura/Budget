@@ -181,17 +181,17 @@ function throwIfNotSetInArray(array $array, $key, $message = "not_in_array", $co
         }
         throw new IMException($message, $code);
     }
-    
+
     if ($array[$key] == "null") {
         return null;
     }
-    
+
     return $array[$key];
 }
 
 function throwIfNotSetInArrayAndNotEmpty(array $array, $key) {
     throwIfNotSetInArray($array, $key);
-    throwIfEmptyString($array[$key],"empty_$key");
+    throwIfEmptyString($array[$key], "empty_$key");
     return $array[$key];
 }
 
@@ -203,7 +203,7 @@ function throwIfNotSetInArrayOrNotNumeric(array $array, $key) {
 
 function throwIfNotSetInArrayOrNotNumericAndLarger(array $array, $key, $larger, $messageAdd = "") {
     $value = throwIfNotSetInArrayOrNotNumeric($array, $key);
-    throwIfFalse($value > $larger, "must_be_bigger_$key".$messageAdd);
+    throwIfFalse($value > $larger, "must_be_bigger_$key" . $messageAdd);
     return $value;
 }
 
@@ -225,7 +225,7 @@ function groupArrayByValue($array, $valueToGroup, $function = null, $onlySingle 
 
     if (is_array($array) && !empty($array)) {
         foreach ($array as $entry) {
-            $value  = $entry[$valueToGroup];
+            $value = $entry[$valueToGroup];
             if (!isset($groupedArray[$value])) {
                 $groupedArray[$value] = array();
             }
@@ -245,7 +245,7 @@ function groupArrayByValue($array, $valueToGroup, $function = null, $onlySingle 
 }
 
 function postValueOrSavedValue($postKey, $savedData, $savedKey, $default = "") {
-    
+
     if (is_array($postKey) && isset($_POST[$postKey[0]]) && isset($_POST[$postKey[0]][$postKey[1]])) {
         return $_POST[$postKey[0]][$postKey[1]];
     } else if (!is_array($postKey) && isset($_POST[$postKey])) {
@@ -258,5 +258,19 @@ function postValueOrSavedValue($postKey, $savedData, $savedKey, $default = "") {
 }
 
 function formatAmount($amount) {
-    return number_format($amount, 0, ',', ' ').' Kč';
+    return number_format($amount, 0, ',', ' ') . ' Kč';
+}
+
+function colorInverse($color) {
+    $color = str_replace('#', '', $color);
+    if (strlen($color) != 6) {
+        return '000000';
+    }
+    $rgb = '';
+    for ($x = 0; $x < 3; $x++) {
+        $c = 255 - hexdec(substr($color, (2 * $x), 2));
+        $c = ($c < 0) ? 0 : dechex($c);
+        $rgb .= (strlen($c) < 2) ? '0' . $c : $c;
+    }
+    return '#' . $rgb;
 }

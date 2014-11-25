@@ -5,11 +5,11 @@
         <div class="col-xs-12 col-sm-12 col-lg-4 col-lg-push-4">
             <table class="table table-bordered table-hover">
                 <tr>
-                    <td><a href="/prijmy/mesto/<?php echo $datainfo["subjekt"]?>">Příjmy</a></td>
+                    <td><a href="/prijmy/mesto/<?php echo $datainfo["subjekt"] ?>/<?php echo $datainfo['rok'] ?>">Příjmy</a></td>
                     <td class="text-right"><?php echo number_format($revenuesSum, 0, ',', ' ') ?> Kč</td>
                 </tr>
                 <tr>
-                    <td><a href="/vydaje/mesto/<?php echo $datainfo["subjekt"]?>">Výdaje</a></td>
+                    <td><a href="/vydaje/mesto/<?php echo $datainfo["subjekt"] ?>/<?php echo $datainfo['rok'] ?>">Výdaje</a></td>
                     <td class="text-right"><?php echo number_format($costsSum, 0, ',', ' ') ?> Kč</td>
                 </tr>
                 <tr>
@@ -25,12 +25,9 @@
             <div id="outcomeChart<?php echo $datainfo['rok'] ?>"></div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-sm-8 col-sm-offset-2 col-lg-6 col-lg-offset-3" id="overviewChart<?php echo $datainfo['rok'] ?>"></div>
-    </div>
 </div>
-<script>    
-    $(function () { 
+<script>
+    $(function () {
         Highcharts.setOptions({
             chart: {
                 plotBackgroundColor: null,
@@ -44,7 +41,7 @@
 //                enabled: false
 //            },
             lang: {
-                numericSymbols: [ " tis." , " mil." , "G" , "T" , "P" , "E"],
+                numericSymbols: [" tis.", " mil.", "G", "T", "P", "E"],
                 thousandsSep: " ",
             },
             plotOptions: {
@@ -60,23 +57,30 @@
                             width: 'auto'
                         },
                     },
+                    point: {
+                        events: {
+                            legendItemClick: function () {
+                                return false; // <== returning false will cancel the default action
+                            }
+                        }
+                    },
                     showInLegend: true,
-                }
+                },
             },
         });
-        
-        
+
+
         $('#incomeChart<?php echo $datainfo['rok'] ?>').highcharts({
             title: {
                 text: 'Příjmy'
             },
-            legend:{
+            legend: {
                 align: 'right',
-                verticalAlign:'middle',
-                width: 220,
+                verticalAlign: 'middle',
+                width: 160,
                 itemStyle: {
-                    width:210,
-                    fontSize:'11px',
+                    width: 150,
+                    fontSize: '11px',
                     fontWeight: 'normal',
                 }
             },
@@ -84,29 +88,28 @@
                     type: 'pie',
                     name: 'Příjmy',
                     data: [
-                        <?php
-                            foreach($revenuesChart as $key => $value)
-                            {
-                                echo '[\''.$key.'\','.$value.'],';
-                            }
-                        ?>
+<?php
+foreach ($revenuesChart as $key => $value) {
+    echo '[\'' . $key . '\',' . $value . '],';
+}
+?>
                     ],
                 }]
         });
     });
-    
+
     $(function () {
         $('#outcomeChart<?php echo $datainfo['rok'] ?>').highcharts({
             title: {
                 text: 'Výdaje'
             },
-            legend:{
+            legend: {
                 align: 'right',
-                verticalAlign:'middle',
-                width: 220,
+                verticalAlign: 'middle',
+                width: 160,
                 itemStyle: {
-                    width:210,
-                    fontSize:'11px',
+                    width: 150,
+                    fontSize: '11px',
                     fontWeight: 'normal',
                 }
             },
@@ -114,60 +117,14 @@
                     type: 'pie',
                     name: 'Výdaje',
                     data: [
-                        <?php
-                            foreach($costsChart as $key => $value)
-                            {
-                                echo '[\''.$key.'\','.$value.'],';
-                            }
-                        ?>
+<?php
+foreach ($costsChart as $key => $value) {
+    echo '[\'' . $key . '\',' . $value . '],';
+}
+?>
                     ],
                 }]
         });
     });
-    
-    $(function () {
-    $('#overviewChart<?php echo $datainfo['rok'] ?>').highcharts({
-        title: {
-            text: 'Saldo hospodaření'
-        },
-        xAxis: {
-            categories: [<?php echo implode(',' , $overviewChart['Kategorie'] )?>]
-        },
-        yAxis: {
-            min: 0,
-            title: {
-                text: 'Miliony'
-            }
-        },
-        credits: {
-            enabled: false
-        },
-        tooltip: {
-            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                '<td style="padding:0 0 0 5px;text-align:right"><b>{point.y} Kč</b></td></tr>',
-            footerFormat: '</table>',
-            shared: true,
-            useHTML: true
-        },        
-        series: [{
-            type: 'column',
-            name: 'Příjmy',
-            data: [<?php echo implode(',' , $overviewChart['Příjmy'] )?>]
-        }, {
-            type: 'column',
-            name: 'Výdaje',
-            data: [<?php echo implode(',' , $overviewChart['Výdaje'] )?>]
-        }, {
-            name: 'Saldo',
-            data: [<?php echo implode(',' , $overviewChart['Saldo'] )?>],
-            marker: {
-                lineWidth: 2,
-                lineColor: Highcharts.getOptions().colors[3],
-                fillColor: 'white'
-            }
-        }]
-    });
-    });
-    
+
 </script>

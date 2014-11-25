@@ -10,11 +10,7 @@
                 <li ui-sref-active="active" ui-sref=".view-name"><span>1</span> Název pohledu</li>
                 <li ui-sref-active="active" ui-sref=".views"><span>2</span> Pohledy</li>
                 <li ui-sref-active="active" ui-sref=".fields"><span>3</span> Výběr polí</li>
-                <!--                <li ui-sref-active="active" ui-sref=".column-names"><span>4</span> Jména sloupců</li>
-                                <li ui-sref-active="active" ui-sref=".where"><span>5</span> Filtrovat řádky</li>
-                                <li ui-sref-active="active" ui-sref=".group-by"><span>6</span> Seskupit</li>
-                                <li ui-sref-active="active" ui-sref=".add-rows"><span>7</span> Další</li>
-                                <li ui-sref-active="active" ui-sref=".display"><span>8</span> Zobrazení</li>-->
+                <li ui-sref-active="active" ui-sref=".display"><span>4</span> Zobrazení</li>
             </ul>
         </div>
 
@@ -26,37 +22,14 @@
         </form>
 
     </div>
-    <h3 class="text-center">{{ joinViewsData.view_name}}</h3>
+    <h3 class="text-center">{{ formData.view_name}}</h3>
     <div class="panel panel-default">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th ng-repeat="value in joinViewsData.fields track by $index">
-                        <span>{{value.alias}}</span>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="(key, value) in tableData.table track by $index">
-                    <td ng-repeat="(k, val) in joinViewsData.fields track by $index">
-                        <span ng-if="val.formatter == 'no'">
-                            <span>{{value[val.alias]}}</span>
-                        </span>
-                        <span ng-if="val.formatter == 'currency'">
-                            <span>{{value[val.alias] | currency}}</span>
-                        </span>
-                        <span ng-if="val.formatter == 'number'">
-                            <span>{{value[val.alias] | number}}</span>
-                        </span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <view-table  form="formData" table="tableData"></view-table>
     </div>
 </div>
 
 <pre>
-{{joinViewsData| json}}
+{{formData| json}}
 </pre>
 
 <pre>

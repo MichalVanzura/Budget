@@ -11,7 +11,7 @@
               }
               ?>
         <link rel="stylesheet"
-              href="<?php echo base_url()?>assets/css/default.css">
+              href="<?php echo base_url() ?>assets/css/default.css">
         <script src="<?php echo base_url(); ?>assets/js/jquery-1.11.1.min.js"
         type="text/javascript"></script>
         <script type="text/javascript"
@@ -21,14 +21,23 @@
             echo '<script type="text/javascript" src="' . $js . '"></script>';
         }
 
-        if(!empty($appearance)) { ?>
-        <style>
-            .navbar.main {
-                background-color: <?php if($appearance['header_color'] != NULL){ echo $appearance['header_color']; } ?>;
-            }
-        </style>
-        <?php 
-        }?>
+        if (!empty($appearance)) {
+            ?>
+            <style>
+    <?php if ($appearance['header_color'] != NULL) { ?>
+                    .navbar.main {
+                        background-color: <?php echo $appearance['header_color']; ?>;
+                    }
+                    .navbar.main .navbar-brand a {
+                        color: <?php echo colorInverse($appearance['header_color']); ?>;
+                    }
+                    .navbar.main .navbar-nav > li > a {
+                        color: <?php echo colorInverse($appearance['header_color']); ?>;
+                    }
+            <?php } ?>   
+            </style>
+            <?php }
+        ?>
         <title><?php echo $title; ?></title>
     </head>
     <body>
@@ -43,87 +52,98 @@
                                 class="icon-bar"></span>
                         </button>
                         <span class="navbar-brand">
-                            <img class="logo" src="<?php if(!empty($appearance) && $appearance['logo_path'] != NULL){ echo base_url().$appearance['logo_path']; } ?>" alt="">
-                            Rozpočet
+                            <img class="logo" src="<?php if (!empty($appearance) && $appearance['logo_path'] != NULL) {
+            echo base_url() . $appearance['logo_path'];
+        } ?>" alt="">
+                            <?php if ($datainfo['subjekt_typ'] == 0) { ?>
+                            <a href="<?php echo base_url() . 'mesto/' . $datainfo['subjekt'] .'/'. $datainfo['rok']; ?>">Rozpočet</a>
+                            <?php } else { ?>
+                            <a href="<?php echo base_url() . 'organizace/' . $datainfo['subjekt'] .'/'. $datainfo['rok']; ?>">Rozpočet</a>
+                            <?php } ?>
                         </span>
                     </div>
 
                     <div class="collapse navbar-collapse" id="main-menu">
-                        <ul class="nav navbar-nav navbar-right"> 
+                        <ul class="nav navbar-nav navbar-right">
+                            <?php if ($datainfo['subjekt_typ'] == 0) { ?>
+                                <li><a href="<?php echo base_url() . 'prijmy/mesto/' . $datainfo['subjekt']. '/' . $datainfo['rok']; ?>">Příjmy</a></li>
+                                <li><a href="<?php echo base_url() . 'vydaje/mesto/' . $datainfo['subjekt']. '/' . $datainfo['rok']; ?>">Výdaje</a></li>
+                                <li><a href="<?php echo '#' ?>">Financování</a></li>
+                            <?php } ?>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo($datainfo['subjekt_nazev']); ?><span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="<?php echo base_url().'admin/zakladni/'.$datainfo['subjekt']; ?>">Administrace</a></li>
+                                    <li><a href="<?php echo base_url() . 'admin/zakladni/' . $datainfo['subjekt']; ?>">Administrace</a></li>
                                 </ul>
                             </li>
                         </ul>
                     </div>
                 </div>
             </nav>
-            <?php if(!empty($subMenu)) {?>
-            <div class="container-fluid">
-                <div class="row">
-                    <nav class="navbar navbar-default col-md-5" role="navigation">
-                        <div class="container-fluid">
-                            <div class="navbar-header">
-                                <button type="button" class="navbar-toggle" data-toggle="collapse"
-                                        data-target="#years-menu">
-                                    <span class="sr-only">Toggle navigation</span> <span
-                                        class="icon-bar"></span> <span class="icon-bar"></span> <span
-                                        class="icon-bar"></span>
-                                </button>
-                                <span class="navbar-brand" >Rok</span>
-                            </div>
+<?php if (!empty($subMenu)) { ?>
+                <div class="container-fluid">
+                    <div class="row">
+                        <nav class="navbar navbar-default col-md-5" role="navigation">
+                            <div class="container-fluid">
+                                <div class="navbar-header">
+                                    <button type="button" class="navbar-toggle" data-toggle="collapse"
+                                            data-target="#years-menu">
+                                        <span class="sr-only">Toggle navigation</span> <span
+                                            class="icon-bar"></span> <span class="icon-bar"></span> <span
+                                            class="icon-bar"></span>
+                                    </button>
+                                    <span class="navbar-brand" >Rok</span>
+                                </div>
 
-                            <div class="collapse navbar-collapse" id="years-menu">
-                                <ul class="nav navbar-nav">
-                                    <?php $yearsMenu = $this->dynamic_menu->build_years_menu($datainfo['subjekt']); ?>
-                                    <?php
-                                    $pre = '';
-                                    if(isset($prefix)) {
-                                        $pre = $prefix;
-                                    } 
-                                    foreach ($yearsMenu as $item) {
-                                        echo '<li><a href="' . base_url(). $pre . $item['url'] . '/' . $item['rok'] . '">' . $item['rok'] . '</a></li>';
-                                    }
-                                    ?>
-                                </ul>
-                            </div>
-                        </div>
-                    </nav>
-                    <nav class="navbar navbar-default col-md-5 col-md-offset-2" role="navigation">
-                        <div class="container-fluid">
-                            <div class="navbar-header">
-                                <button type="button" class="navbar-toggle" data-toggle="collapse"
-                                        data-target="#secondary-menu">
-                                    <span class="sr-only">Toggle navigation</span> <span
-                                        class="icon-bar"></span> <span class="icon-bar"></span> <span
-                                        class="icon-bar"></span>
-                                </button>
-                                <span class="navbar-brand" >Subjekt</span>
-                            </div>
-
-                            <div class="collapse navbar-collapse" id="secondary-menu">
-                                <ul class="nav navbar-nav navbar-right">
-                                    <?php $subjectMenu = $this->dynamic_menu->build_subject_menu($datainfo['subjekt']); ?>
-                                    <li><a href="<?php echo base_url() . $subjectMenu['parent']['url'] ?>"> <?php echo $subjectMenu['parent']['title'] ?></a></li>
-                                    <li class="dropdown">
-                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Městské organizace <span class="caret"></span></a>
-                                        <ul class="dropdown-menu" role="menu">
+                                <div class="collapse navbar-collapse" id="years-menu">
+                                    <ul class="nav navbar-nav">
+                                        <?php $yearsMenu = $this->dynamic_menu->build_years_menu($datainfo['subjekt']); ?>
                                         <?php
-                                        foreach ($subjectMenu['children'] as $child) {
-                                            echo '<li><a href="' . base_url() . $child['url'] . '">' . $child['title'] . '</a></li>';
+                                        $pre = '';
+                                        if (isset($prefix)) {
+                                            $pre = $prefix;
+                                        }
+                                        foreach ($yearsMenu as $item) {
+                                            echo '<li><a href="' . base_url() . $pre . $item['url'] . '/' . $item['rok'] . '">' . $item['rok'] . '</a></li>';
                                         }
                                         ?>
-                                        </ul>
-                                    </li>
-                                </ul>
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
-                    </nav>
+                        </nav>
+                        <nav class="navbar navbar-default col-md-5 col-md-offset-2" role="navigation">
+                            <div class="container-fluid">
+                                <div class="navbar-header">
+                                    <button type="button" class="navbar-toggle" data-toggle="collapse"
+                                            data-target="#secondary-menu">
+                                        <span class="sr-only">Toggle navigation</span> <span
+                                            class="icon-bar"></span> <span class="icon-bar"></span> <span
+                                            class="icon-bar"></span>
+                                    </button>
+                                    <span class="navbar-brand" >Subjekt</span>
+                                </div>
+
+                                <div class="collapse navbar-collapse" id="secondary-menu">
+                                    <ul class="nav navbar-nav navbar-right">
+    <?php $subjectMenu = $this->dynamic_menu->build_subject_menu($datainfo['subjekt']); ?>
+                                        <li><a href="<?php echo base_url() . $subjectMenu['parent']['url'] ?>"> <?php echo $subjectMenu['parent']['title'] ?></a></li>
+                                        <li class="dropdown">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Městské organizace <span class="caret"></span></a>
+                                            <ul class="dropdown-menu" role="menu">
+                                                <?php
+                                                foreach ($subjectMenu['children'] as $child) {
+                                                    echo '<li><a href="' . base_url() . $child['url'] . '">' . $child['title'] . '</a></li>';
+                                                }
+                                                ?>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </nav>
+                    </div>
                 </div>
-            </div>
-            <?php }?>
+            <?php } ?>
 
             <?php
             if (!empty($alerts)) {
